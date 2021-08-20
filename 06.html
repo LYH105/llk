@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>小球反弹</title>
+		<style type="text/css">
+			* {
+				margin: 0px;
+				padding: 0px;
+			}
+
+			#wrap {
+				width: 1000px;
+				height: 600px;
+				border: 1px solid black;
+				margin: 50px auto;
+				position: relative;
+			}
+
+			.ball {
+				width: 50px;
+				height: 50px;
+				border-radius: 50%;
+				background-color: red;
+				position: absolute;
+				left: 0px;
+				top: 0px;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="wrap">
+			<div class="ball"></div>
+			<div class="ball"></div>
+			<div class="ball"></div>
+			<div class="ball"></div>
+			<div class="ball"></div>
+			<div class="ball"></div>
+			<div class="ball"></div>
+			<div class="ball"></div>
+			<div class="ball"></div>
+			<div class="ball"></div>
+			<div class="ball"></div>
+			<div class="ball"></div>
+			<div class="ball"></div>
+			<div class="ball"></div>
+			<div class="ball"></div>
+			<div class="ball"></div>
+			<div class="ball"></div>
+			<div class="ball"></div>
+			<div class="ball"></div>
+			<div class="ball"></div><div class="ball"></div>
+			<div class="ball"></div>
+			<div class="ball"></div>
+			<div class="ball"></div>
+			<div class="ball"></div>
+			<div class="ball"></div>
+			<div class="ball"></div>
+			<div class="ball"></div>
+			<div class="ball"></div>
+			<div class="ball"></div><div class="ball"></div>
+			<div class="ball"></div>
+			<div class="ball"></div>
+			<div class="ball"></div>
+			<div class="ball"></div>
+			<div class="ball"></div>
+			<div class="ball"></div>
+			<div class="ball"></div>
+			<div class="ball"></div>
+			<div class="ball"></div><div class="ball"></div>
+			<div class="ball"></div>
+			<div class="ball"></div>
+			<div class="ball"></div>
+			<div class="ball"></div>
+			<div class="ball"></div>
+			<div class="ball"></div>
+			<div class="ball"></div>
+			<div class="ball"></div>
+			<div class="ball"></div>
+		</div>
+	</body>
+	<script type="text/javascript">
+		// 封装了随机数函数
+		function randomNum(m, n) {
+			// 如果有的同学不按规矩来，我们已经要求了 m是小的，n是大的，但是有非要随便传？？？
+
+			// 交换位置
+			var temp;
+			if (m > n) {
+				temp = n;
+				n = m;
+				m = temp;
+			}
+
+			return Math.floor(Math.random() * (n - m + 1)) + m;
+		}
+		//容器的宽度
+		var wrapwidth = wrap.clientWidth;
+		//容器的高度
+		var wrapheight = wrap.clientHeight;
+		//wrap下第一个子元素的宽度
+		// var ballwidth = wrap.children[0].offsetWidth
+		// var ballheight = wrap.children[0].offsetHeight
+		for (var i = 0; i < wrap.children.length; i++) {
+			//wrap容器下每个div在x轴随机移动1-5的大小
+			wrap.children[i].x = randomNum(1, 5)
+			//wrap容器下每个div在y轴随机移动1-5的大小
+			wrap.children[i].y = randomNum(1, 5)
+			//小球随机向左或者右移动
+			wrap.children[i].flagx = randomNum(0, 1) ? true : false;
+			//小球随机上或者下移动
+			wrap.children[i].flagy = randomNum(0, 1) ? true : false;
+
+			//小球位置随机摆放
+			wrap.children[i].style.top = randomNum(0, wrapheight - wrap.children[i].offsetHeight) + 'px';
+			wrap.children[i].style.left = randomNum(0, wrapwidth - wrap.children[i].offsetWidth) + 'px';
+		
+		}
+		//小球动着变大小
+		function big(){
+			for(var i = 0; i < wrap.children.length; i++) {
+			wrap.children[i].style.width = randomNum(10, 80) + 'px';
+			wrap.children[i].style.height = wrap.children[i].offsetWidth + 'px';
+			}
+		}
+		//小球颜色动着换着
+		function bian(){
+			for(var i = 0; i < wrap.children.length; i++) {
+				wrap.children[i].style.backgroundColor = `rgb(${randomNum(0,255)},${randomNum(0,255)},${randomNum(0,255)})`;
+				
+			}
+		}
+		//小球水平移动
+		function movex() {
+			for (var i = 0; i < wrap.children.length; i++) {
+
+				if (wrap.children[i].flagx) {
+					//wrap.children[i].style.left给小球设置距离左边的大小
+					//wrap.children[i].offsetLeft小球左边到容器左边的间距
+					//wrap.children[i].x需要一定的距离
+					wrap.children[i].style.left = wrap.children[i].offsetLeft + wrap.children[i].x + 'px';
+					//判断小球是否到达最右边
+					//小球距离左边是否大于或者等于容器的宽度减去小球宽度
+					if (wrap.children[i].offsetLeft >= (wrapwidth - wrap.children[i].offsetWidth)) {
+						//大于或者等于改变小球运动方向
+						wrap.children[i].flagx = false;
+					}
+				} else {
+					// 改变方向往左移动
+					wrap.children[i].style.left = wrap.children[i].offsetLeft - wrap.children[i].x + 'px';
+					if (wrap.children[i].offsetLeft <= 0) {
+						wrap.children[i].flagx = true;
+					}
+				}
+			}
+		}
+		//水平方向移动
+		function movey() {
+
+			for (var i = 0; i < wrap.children.length; i++) {
+				if (wrap.children[i].flagy) {
+					//wrap.children[i].style.top给小球设置距离顶部的大小
+					wrap.children[i].style.top = wrap.children[i].offsetTop + wrap.children[i].x + 'px';
+					// 判断小球是否到达最底部
+					if (wrap.children[i].offsetTop >= (wrapheight - wrap.children[i].offsetHeight)) {
+						wrap.children[i].flagy = false; // 改变小球运动方向
+					}
+
+				} else {
+					wrap.children[i].style.top = wrap.children[i].offsetTop - wrap.children[i].y + 'px';
+					if (wrap.children[i].offsetTop <= 0) {
+						wrap.children[i].flagy = true; // 
+					}
+				}
+			}
+		}
+		setInterval(function(){
+			movex();
+			movey();
+			
+		},10)
+		setInterval(function(){
+			bian()
+			
+		},20)
+		setInterval(function(){
+			big()
+		},500)
+	</script>
+</html>
