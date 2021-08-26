@@ -12,10 +12,18 @@
 				margin-left: 1000px;
 				margin-top: 1000px;
 			}
+			#box{
+				width: 200px;
+				height: 200px;
+				background-color: red;
+			}
 		</style>
 	</head>
 	<body>
 		<div id="div1"></div>
+		<div id="box">
+			
+		</div>
 		<script type="text/javascript">
 			/* 
 			移动端因为可以接受多个触摸点，所以我们如果想要获取到触摸点的位置信息，不能直接通过事件对象获取了，要想获取触摸点位置信息，需要先获取触摸点，在获取该点的位置信息。
@@ -37,6 +45,34 @@
 				alert(`clientX/Y:${even.targetTouches[1].clientX},${even.targetTouches[1].clientY}; screenX/Y:${even.targetTouches[1].screenX},${even.targetTouches[1].screenY}; pageX/Y:${even.targetTouches[1].pageX},${even.targetTouches[1].pageY}`);
 				alert(`clientX/Y:${even.targetTouches[2].clientX},${even.targetTouches[2].clientY}; screenX/Y:${even.targetTouches[2].screenX},${even.targetTouches[2].screenY}; pageX/Y:${even.targetTouches[2].pageX},${even.targetTouches[2].pageY}`);
 				alert(`clientX/Y:${even.targetTouches[3].clientX},${even.targetTouches[3].clientY}; screenX/Y:${even.targetTouches[3].screenX},${even.targetTouches[3].screenY}; pageX/Y:${even.targetTouches[3].pageX},${even.targetTouches[3].pageY}`);
+			}
+			/* 
+			移动端常用事件：
+				1、ontouchstart 开始触摸
+				2、ontouchmove 移动触摸（触摸中）
+				3、ontouchend  停止触摸
+				4、ontouchcancel 取消触发，这是被动触发的事件，因为移动设备中有一些优先级比较高的任务，比如来电、闹铃、事件提醒等，如果我们正常触发移动事件时同时又发生了优先级比较高的事件，系统会丢弃原来正在触发的事件，进而触发ontouchcancel。
+			    我们在在ontouchcancel里做一些与当前操作有关的保护性操作，比：暂停游戏，暂停音频或者视频，保存目前的数据等...
+			 */
+			box.ontouchstart=function(){
+			console.log('开始触摸')
+		}
+		function randomcolor() {
+			var r = Math.floor(Math.random() * 256);
+			var g = Math.floor(Math.random() * 256);
+			var b = Math.floor(Math.random() * 256);
+			return 'rgb(' + r + ',' + g + ',' + b + ')'
+		}
+		box.ontouchmove=function(e){
+			var even=e||event
+			even.preventDefault()
+			this.style.backgroundColor=randomcolor()
+		}
+			box.ontouchend = function(){
+				alert('结束触摸！');
+			}
+			box.ontouchcancel = function(){
+				alert('事件取消！');
 			}
 		</script>
 	</body>
