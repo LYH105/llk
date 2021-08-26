@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>常用事件对象属性</title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<style type="text/css">
+			#div1{
+				width: 200px;
+				height: 200px;
+				background-color: red;
+				margin-left: 1000px;
+				margin-top: 1000px;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="div1"></div>
+		<script type="text/javascript">
+			/* 
+			移动端因为可以接受多个触摸点，所以我们如果想要获取到触摸点的位置信息，不能直接通过事件对象获取了，要想获取触摸点位置信息，需要先获取触摸点，在获取该点的位置信息。
+			 以下三个属性都会得到一个触摸点集合（数组），里边存储的是一个一个的触摸点对象
+				1、touches  当前屏幕上的所有触摸点集合
+				2、targetTouches 触发事件元素上的所有触摸点集合
+				3、changedTouches 距离最近一次触摸点变换的集合
+				
+			触摸点对象的常用属性：
+				1、clientX/Y  触摸点距离浏览器左端和上端的距离
+				2、screenX/Y  触摸点距离屏幕左端和上端的距离
+				3、pageX/Y    触摸点距离页面左端和上端的距离
+			 */
+			div1.ontouchstart = function(e){
+				var even = e || event;
+				console.log(even);
+				
+				alert(`clientX/Y:${even.targetTouches[0].clientX},${even.targetTouches[0].clientY}; screenX/Y:${even.targetTouches[0].screenX},${even.targetTouches[0].screenY}; pageX/Y:${even.targetTouches[0].pageX},${even.targetTouches[0].pageY}`);
+				alert(`clientX/Y:${even.targetTouches[1].clientX},${even.targetTouches[1].clientY}; screenX/Y:${even.targetTouches[1].screenX},${even.targetTouches[1].screenY}; pageX/Y:${even.targetTouches[1].pageX},${even.targetTouches[1].pageY}`);
+				alert(`clientX/Y:${even.targetTouches[2].clientX},${even.targetTouches[2].clientY}; screenX/Y:${even.targetTouches[2].screenX},${even.targetTouches[2].screenY}; pageX/Y:${even.targetTouches[2].pageX},${even.targetTouches[2].pageY}`);
+				alert(`clientX/Y:${even.targetTouches[3].clientX},${even.targetTouches[3].clientY}; screenX/Y:${even.targetTouches[3].screenX},${even.targetTouches[3].screenY}; pageX/Y:${even.targetTouches[3].pageX},${even.targetTouches[3].pageY}`);
+			}
+		</script>
+	</body>
+</html>
+
