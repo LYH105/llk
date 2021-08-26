@@ -154,7 +154,7 @@
 				//两个触摸点中间的距离
 				var dis= Math.sqrt( Math.pow(firstpos1.x-firstpos2.x,2)+Math.pow(firstpos1.y-firstpos2.y,2))
 				//最新一次 两个触摸点中间的距离
-				var ndis= Math.sqrt( Math.pow(nowpos1.x-nowpos1.x,2)+Math.pow(fnowpos1.y-nowpos1.y,2))
+				var ndis= Math.sqrt( Math.pow(nowpos1.x-nowpos2.x,2)+Math.pow(fnowpos1.y-nowpos2.y,2))
 				//放大或者缩小的比例
 				var scale=ndis/dis
 				div3.style.width=div1.offsetWidth*scale+'px'
