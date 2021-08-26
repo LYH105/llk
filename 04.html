@@ -39,8 +39,8 @@
 		</style>
 	</head>
 	<body>
-		<div id="box"></div>
-		<div id="div1">摸我我会变色</div>
+		<div id="box">摸我我会变色</div>
+		<div id="div1"></div>
 		<div id="div2">拖动我我会动
 		</div>
 		<div id="div3">捏我放大缩小</div>
@@ -115,73 +115,82 @@
 				}
 			}
 			//移动元素缩放
-					var firstpos1={
-			x:0,
-			y:0
-		}
-		var firstpos2={
-			x:0,
-			y:0
-		}
-		var nowpos1={
-			x:0,
-			y:0
-		}
-		var nowpos2={
-			x:0,
-			y:0
-		}
-		div3.ontouchstart=function(e){
-			var even=e||event
-			even.preventDefault()
-			//第一个触摸点
-			var touch1=even.touches[0]
-			//第二个触摸点
-			var touch2=even.touches[1]
-			//获取最初两个触摸点的位置信息
-			firstpos1.x=touch1.clientX
-			firstpos1.y=touch1.clientY
-			firstpos2.x=touch2.clientX
-			firstpos2.y=touch2.clientY
+		var firstPos1 = {
+				x: 0,
+				y: 0
+			}
+			var firstPos2 = {
+				x: 0,
+				y: 0
+			}
 			
-			document.ontouchmove=function(e){
-				var even=e||event
-				even.preventDefault()
-				//不断的获取最新的两个触摸点之间的距离
-				//第一个触摸点
-				var touch1=even.touches[0]
-				//第二个触摸点
-				var touch2=even.touches[1]
-				//最新触摸点的位置信息
-				nowpos1.x=touch1.clientX
-				nowpos1.y=touch1.clientY
-				nowpos1.x=touch2.clientX
-				nowpos1.y=touch2.clientY
-				//第一次两个触摸点的 水平方向的距离(第一个触摸点 x - 第二个触摸点x)，取绝对值
-				//Math.abs(firstpos1.x-firstpos2.x)
-				//第一次两个触摸点的 垂直方向的距离(第一个触摸点y - 第二个触摸点 y)，取绝对值
-				//Math.abs(firstpos1.y-firstpos2.y)
-				
-				//两个触摸点中间的距离
-				var dis= Math.sqrt( Math.pow(firstpos1.x-firstpos2.x,2)+Math.pow(firstpos1.y-firstpos2.y,2))
-				//最新一次 两个触摸点中间的距离
-				var ndis= Math.sqrt( Math.pow(nowpos1.x-nowpos2.x,2)+Math.pow(fnowpos1.y-nowpos2.y,2))
-				//放大或者缩小的比例
-				var scale=ndis/dis
-				div3.style.width=div1.offsetWidth*scale+'px'
-				div3.style.height=div3.style.width
-				
-				//把新的触摸点位置信息保留下来，为下一次缩放做准备
-				firstpos1.x=nowpos1.x
-				firstpos1.y=nowpos1.y
-				firstpos2.x=nowpos2.x
-				firstpos2.y=nowpos2.y
+			var nowPos1 = {
+				x: 0,
+				y: 0
 			}
-			document.ontouchend=function(){
-				//重置ontouchmove事件
-				document.ontouchmove=null
+			var nowPos2 = {
+				x: 0,
+				y: 0
 			}
-		}
+			
+			div3.ontouchstart = function(e){
+				var even = e || event;
+				even.preventDefault();
+				// 获取触摸点
+				var touchObj1 = even.touches[0];
+				var touchObj2 = even.touches[1];
+				
+				// 获取最初两个触摸点的位置信息。
+				firstPos1.x = touchObj1.clientX;
+				firstPos1.y = touchObj1.clientY;
+				firstPos2.x = touchObj2.clientX;
+				firstPos2.y = touchObj2.clientY;
+				
+				document.ontouchmove = function(e){
+					var even = e || event;
+					even.preventDefault();
+					// 不断获取最新的两个触摸点
+					var touchObj1 = even.touches[0];
+					var touchObj2 = even.touches[1];
+					
+					// 最新的触摸点位置信息
+					nowPos1.x = touchObj1.clientX;
+					nowPos1.y = touchObj1.clientY;
+					nowPos2.x = touchObj2.clientX;
+					nowPos2.y = touchObj2.clientY;
+					
+					// 第一次的两个触摸点的 水平方向的距离（第一个触摸点x - 第二个触摸点x），取绝对值
+					//Math.abs(firstPos1.x - firstPos2.x)
+					
+					// 第一次的两个触摸点的 垂直方向的距离（第一个触摸点y - 第二个触摸点y），取绝对值
+					//Math.abs(firstPos1.y - firstPos2.y)
+					
+					// 当前移动的最新一次的两个触摸点的 水平方向的距离（最新第一个触摸点x - 最新第二个触摸点x），取绝对值
+					//Math.abs(nowPos1.x - nowPos1.x)
+					// 当前移动的最新一次的两个触摸点的 垂直方向的距离（最新第一个触摸点y - 最新第二个触摸点y），取绝对值
+					//Math.abs(nowPos1.y - nowPos1.y)
+					
+					// 第一次 两个触摸点中间的距离 。通过勾股定理计算第三边的长度
+					var distance1 = Math.sqrt(Math.pow(firstPos1.x - firstPos2.x, 2) + Math.pow(firstPos1.y - firstPos2.y,2));
+					
+					// 最新一次 两个触摸点中间的距离
+					var distance2 = Math.sqrt(Math.pow(nowPos1.x - nowPos2.x, 2) + Math.pow(nowPos1.y - nowPos2.y,2));
+					// 放大或缩小的比例
+					var scale = distance2 / distance1;
+					
+					div3.style.width = div1.offsetWidth * scale + 'px';
+					div3.style.height = div1.style.width;
+					
+					// 把最新一次的两个触摸点的位置信息保留下来，为下一次缩放做准备
+					firstPos1.x = nowPos1.x;
+					firstPos1.y = nowPos1.y;
+					firstPos2.x = nowPos2.x;
+					firstPos2.y = nowPos2.y;
+				}
+				document.ontouchend = function(){
+					document.ontouchmove = null;
+				}
+			}
 		</script>
 	</body>
 </html>
