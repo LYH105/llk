@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title>Fly</title>
+		<style type="text/css">
+			* {
+				margin: 0;
+				padding: 0;
+				-webkit-user-select: none;
+				-moz-user-select: none;
+				-ms-user-select: none;
+				user-select: none;
+			}
+
+			#box {
+				width: 343px;
+				height: 480px;
+				margin: 100px auto 0;
+				background-image: url(img/bg.jpg);
+				background-repeat: no-repeat;
+				position: relative;
+				overflow: hidden;
+			}
+
+			#head {
+				width: 236px;
+				height: 77px;
+				background-image: url(img/head.jpg);
+				background-repeat: no-repeat;
+				position: absolute;
+				top: 100px;
+				left: 60px;
+			}
+
+			#head>img {
+				position: absolute;
+				right: 0px;
+				top: 50%;
+				margin-top: -13px;
+				animation: fly 1.6s infinite linear;
+			}
+
+			@keyframes fly {
+				from {
+					top: 50%;
+				}
+
+				25% {
+					top: 25%;
+				}
+
+				50% {
+					top: 50%;
+				}
+
+				75% {
+					top: 75%;
+				}
+
+				to {
+					top: 50%;
+				}
+			}
+
+			#startMenu {
+				/* margin-top: 300px; */
+				text-align: center;
+			}
+
+			#startMenu>img {
+				margin-top: 300px;
+				cursor: pointer;
+			}
+
+			#endstart {
+				width: 269px;
+				height: 135px;
+				background: url(img/message.jpg)no-repeat;
+				position: absolute;
+				top: 50%;
+				left: 50%;
+				transform: translateX(-50%)translateY(-50%);
+				display: none;
+				z-index: 10;
+			}
+
+			#currentscore {
+				font-size: 25px;
+				position: absolute;
+				right: 45px;
+				top: 30px;
+			}
+
+			#bestscore {
+				font-size: 25px;
+				position: absolute;
+				right: 45px;
+				top: 80px;
+			}
+
+			#score {
+				position: absolute;
+				top: 0px;
+				width: 100%;
+				z-index: 12;
+				text-align: center;
+				display: none;
+			}
+
+			#bird {
+				position: absolute;
+				/* top: 50%; */
+				top: calc(50% - 15px);
+				left: 60px;
+				z-index: 11;
+				/* margin-top: -15px; */
+				display: none;
+			}
+
+			#pipes {
+				width: 100%;
+				height: 100%;
+				position: absolute;
+				top: 0;
+				left: 0;
+				list-style-type: none;
+				display: none;
+			}
+
+			/* 为管道预留的css样式 */
+			.pipe {
+				width: 62px;
+				height: 425px;
+				/* background-color: pink; */
+				position: absolute;
+				left: 343px;
+
+			}
+
+			/* 上管道 */
+			.toppipe {
+				width: 100%;
+				height: 100px;
+				position: absolute;
+				top: 0px;
+				left: 0px;
+				background: url(img/up_pipe.png) no-repeat center bottom, url(img/up_mod.png);
+			}
+
+			/* 下管道 */
+			.bottompipe {
+				width: 100%;
+				height: 100px;
+				position: absolute;
+				bottom: 0px;
+				left: 0px;
+				background: url(img/down_pipe.png) no-repeat center top, url(./img/down_mod.png);
+			}
+		</style>
+	</head>
+	<body>
+		<div id="box">
+			<!-- 游戏标题 -->
+			<div id="head">
+				<img src="img/bird.png">
+			</div>
+			<!-- 开始游戏按钮 -->
+			<div id="startMenu"><img src="./img/start.jpg" id="start"></div>
+			<!-- 游戏结束面板 -->
+			<div id="endstart">
+				<span id="currentscore">0</span>
+				<span id="bestscore">0</span>
+			</div>
+			<!-- 顶部得分 -->
+			<div id="score">
+				<img src="./img/0.jpg" id="firsts">
+				<img src="img/0.jpg" id="seconds">
+			</div>
+			<!-- 小鸟 -->
+			<img src="./img/down_bird.png" id="bird">
+			<!-- 管道 -->
+			<ul id="pipes">
+				<!-- <li class="pipe">
+					<div class="toppipe"></div>
+					<div class="bottompipe"></div>
+				</li> -->
+			</ul>
+			<!-- 音频 -->
+			<audio src="./music/bullet.mp3" id="mb">当前浏览器不支持audio</audio>
+			<audio src="./music/game_music.mp3" id="gm">当前浏览器不支持audio</audio>
+			<audio src="./music/game_over.mp3" id="go">当前浏览器不支持audio</audio>
+		</div>
+
+		<script type="text/javascript">
+			/* 1、先写静态页面 
+		 2、点击开始后的效果，小鸟通过点击左键飞扬（d点几下小鸟往上飞一点）
+		 */
+			var bridtim
+			var birdupt,fs=0
+			var cjgd
+			// var pipemovet
+			//点击开始按钮后的效果,开始游戏事件
+			start.onclick = function(e) {
+				var even = e || event
+				//阻止冒泡，阻止父元素的点击事件被触发
+				even.stopPropagation()
+				// 隐藏的元素
+				head.style.display = 'none';
+				startMenu.style.display = 'none'
+				//显示的元素
+				bird.style.display = 'block'
+				score.style.display = 'block'
+				pipes.style.display = 'block'
+				gm.loop = 'loop'
+				gm.play()
+				//控制小鸟往下飞
+				bridtim = setInterval(birDowm, 30)
+				//控制小鸟往上飞
+				box.onclick = birdup
+				//创建管道createpipe
+				cjgd= setInterval(createpipe, 6000)
+			}
+			//下落速度
+			var spend = 0
+
+			//小鸟往下飞的逻辑
+			function birDowm() {
+				bird.src = './img/down_bird.png'
+				//模拟下落
+
+				spend += 0.5
+				//判断最大下落速度
+				if (spend > 5) {
+					spend = 5
+				}
+				bird.style.top = bird.offsetTop + spend + 'px'
+				//检查小鸟是否触底
+				if (bird.offsetTop + bird.offsetHeight >= 425) {
+					// 清除小鸟往下飞，清除定时器，游戏结束
+					clearInterval(bridtim)
+					box.onclick = null
+				}
+			}
+			//小鸟往上飞的逻辑
+			function birdup() {
+				clearInterval(bridtim)
+				mb.play()
+				//换图
+				bird.src = './img/up_bird.png'
+				//我们可能两次点击的时间比较近，一飞一落还没有执行完毕，又开始新的往上飞，这样冲突了。
+				//为了解决这个问题,不管往上或者下，都需要清除定时器
+				clearInterval(birdupt)
+				spend = 7;
+				//开启往上飞的定时器
+				birdupt = setInterval(function() {
+					spend -= 0.5
+					bird.style.top = bird.offsetTop - spend + 'px'
+					//判断小鸟此刻是否已经静止，下一刻就要落下
+					if (spend <= 0) {
+						// 清除往上飞的定时器
+						clearInterval(birdupt)
+						//重置往下落的速度
+						spend = 0
+						//控制小鸟往下飞
+						bridtim = setInterval(birDowm, 30)
+					}
+					//判断小鸟是否触顶
+					if (bird.offsetTop <= 0) {
+						clearInterval(birdupt)
+						box.onclick = null
+					}
+				}, 20);
+			}
+			//创建管道函数
+			function createpipe() {
+				var li = document.createElement('li')
+				//给li加class名
+				li.className = 'pipe'
+				//li添加到ul中
+				pipes.appendChild(li);
+				/* 
+				 创建上管道和下管道
+				 思路:
+					创建两个div一个复杂上管道，一个负责下管道，两个div高度随机，我们要保证两个管道的高度+上中间空白区域等于li总高度。只随机一个管道的高度，计算另外一个管道的高度
+					li的高度-随机一个管道的高度-两个管道中间的距离
+				 */
+				//两个管道中间的距离，通过规定的告诉
+				var passh = 150;
+				//管道最低高度
+				var minh = 60
+				//随机一个管道高度[minh，li.offsetHeight-minh-passh]
+				//随机顶部管道高度
+				var toppipeh = Math.floor(Math.random() * (li.offsetHeight - minh - passh - minh + 1)) + minh;
+				//计算下边管道的高度
+				var bottompipeh = li.offsetHeight - passh - toppipeh
+				//创建上管道
+				var topDiv = document.createElement('div')
+				topDiv.style.height = toppipeh + 'px'
+				topDiv.className = 'toppipe'
+				li.appendChild(topDiv)
+				//创建下管道
+				var bottomDiv = document.createElement('div')
+				bottomDiv.style.height = bottompipeh + 'px'
+				bottomDiv.className = 'bottompipe'
+				li.appendChild(bottomDiv)
+				//移动管道
+				var leftx = pipes.offsetWidth;
+				var pipemovet = setInterval(function() {
+					leftx--;
+					li.style.left = leftx + 'px'
+					//当管道完全移出左边缘，要清除管道
+					if (leftx <= -li.offsetWidth) {
+						// 清除管道移动定时器
+						clearInterval(pipemovet)
+						//删除管道
+						pipes.removeChild(li)
+					}
+					//判断小鸟得分，管道只要左边根容器左边紧贴说明小鸟已经过去
+					//如果li的左边距离左边的宽度==5分数加一
+					if(li.offsetLeft==5){
+						// console.log(li.offsetLeft)
+						fs+=1
+						// console.log(fs)
+						// seconds.src=`img/${fs}.jpg`
+						// if(fs>=10){
+							//获取分数的十位个位数
+							var shi=parseInt((fs%100)/10)
+							var ge=parseInt(fs%10)
+							console.log(shi,ge)
+							//把十位和个位数的赋给上方分数
+							seconds.src=`img/${ge}.jpg`
+							firsts.src=`img/${shi}.jpg`
+						// }
+						}
+					/* 
+					 2、碰撞检查
+						思路:本质上就是两个元素之间的位置关系
+						小鸟与某个管道之间的关系
+						每次管道移动都需要将小鸟和每一个管道做判断
+					 */
+					//console.log(li.offsetLeft)
+					//判断管道到达小鸟所在的位置
+					if(li.offsetLeft<=100&&li.offsetLeft>=40){
+						//如果小鸟的距离上边高度小于等于上边管道的高度那么就是碰到上边的了
+						if(bird.offsetTop<=topDiv.clientHeight){
+							console.log('碰上上了')
+							box.onclick = null
+							clearInterval(pipemovet)
+							endstart.style.display='block'
+							clearInterval(cjgd)
+							bestscore.innerHTML=fs-0
+							gm.pause()
+							go.play()
+						}
+						//如果小鸟的距离上边的高度加上下边管道的高度大于草地到顶部399的距离就是碰到下边的管道了
+						if(bird.offsetTop+bottomDiv.clientHeight>399){
+							console.log('碰到下了')
+							box.onclick = null
+							clearInterval(pipemovet)
+							endstart.style.display='block'
+							clearInterval(cjgd)
+							bestscore.innerHTML=fs-0
+							gm.pause()
+							go.play()
+						}
+					}
+				}, 20);
+			}
+		</script>
+
+	</body>
+</html>
